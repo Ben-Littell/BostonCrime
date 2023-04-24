@@ -40,9 +40,10 @@ aug_16_wed_hours.sort_index(inplace=True)
 #     func.find_data(d_df, 2016, val, 'Monday')
 
 lar_df = d_df[d_df['OFFENSE_CODE_GROUP'] == 'Larceny']
+lar_df_j = lar_df[lar_df['DISTRICT'] == 'E13']
 # print(lar_df.info())
-lar_lat_df2 = lar_df['Lat'].dropna()
-lar_long_df2 = lar_df['Long'].dropna()
+lar_lat_df2 = lar_df_j['Lat'].dropna()
+lar_long_df2 = lar_df_j['Long'].dropna()
 # print(lar_df.info())
 # lar_df.Lat.dropna()
 # print(lar_lat_df2)
