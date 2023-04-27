@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import statistics as stats
 import math
+import folium
 
 
 def guess_centroid(list1, list2):
@@ -236,18 +237,46 @@ def find_data(df, year, month, day, hour=False):
         m_y_d_hours = m_y_d.HOUR.value_counts()
         m_y_d_hours.sort_index(inplace=True)
         m_y_d_hours.plot.bar()
-        plt.title(f'{month_list[month-1]} {year} {day}s Crimes per Hour')
+        plt.title(f'{month_list[month - 1]} {year} {day}s Crimes per Hour')
         plt.show()
     else:
         m_y_day_counts = m_y.DAY_OF_WEEK.value_counts()
         m_y_day_counts.sort_index(inplace=True)
         plt.rcParams['figure.figsize'] = (10, 6)
         m_y_day_counts.plot.bar()
-        plt.title(f'{month_list[month-1]} {year} crimes pre day of week')
+        plt.title(f'{month_list[month - 1]} {year} crimes pre day of week')
         plt.show()
 
 
+def map_crime(df, crime, district):
+    boston_districts = {'Downtown': 'A1', 'Charleston': 'A15',
+                        'East Boston': 'A7', 'Roxbury': 'B2',
+                        'Mattapan': 'B3', 'South Boston': 'C6',
+                        'Dorchester': 'C11', 'South End': 'D4',
+                        'Brighton': 'D14', 'West Roxbury': 'E5',
+                        'Jamaica Plain': 'E13', 'Hyde Park': 'E18'}
+    lar_df = df[df['OFFENSE_CODE_GROUP'] == crime]
+    lar_df_j = lar_df[lar_df['DISTRICT'] == district]
+    lar_lat_df2 = lar_df_j['Lat'].dropna()
+    lar_long_df2 = lar_df_j['Long'].dropna()
+    i_list = lar_lat_df2.index.values.tolist()
+    lar_lat_list = lar_lat_df2.values.tolist()
+    lar_long_list = lar_long_df2.values.tolist()
+    m = folium.Map([42.32, -71.0589], zoom_start=12)
+    for val in range(len(lar_lat_list)):
+        folium.Marker(location=(lar_lat_list[val], lar_long_list[val]),
+                      tooltip=lar_df.OFFENSE_CODE_GROUP.loc[i_list[val]],
+                      popup=lar_df.OFFENSE_DESCRIPTION.loc[i_list[val]]).add_to(m)
+    m.save('index.html')
 
 
+def dis_crime_accurance(districts, df):
+    res_dict = {}
+    for val in districts:
+        dis = df[df['DISTRICT'] == districts[val]].OFFENSE_CODE_GROUP.value_counts()
+        l = dis.index.values.tolist()
+        # print(l[:5])
+        res_dict[val] = l[:5]
 
-
+        # print()
+    print(res_dict)

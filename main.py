@@ -38,33 +38,15 @@ aug_16_wed_hours.sort_index(inplace=True)
 
 # for val in range(1, 13):
 #     func.find_data(d_df, 2016, val, 'Monday')
+# Fire Related Reports
+# Homicide
+boston_districts = {'Downtown': 'A1', 'Charleston': 'A15',
+                    'East Boston': 'A7', 'Roxbury': 'B2',
+                    'Mattapan': 'B3', 'South Boston': 'C6',
+                    'Dorchester': 'C11', 'South End': 'D4',
+                    'Brighton': 'D14', 'West Roxbury': 'E5',
+                    'Jamaica Plain': 'E13', 'Hyde Park': 'E18'}
 
-lar_df = d_df[d_df['OFFENSE_CODE_GROUP'] == 'Larceny']
-lar_df_j = lar_df[lar_df['DISTRICT'] == 'E13']
-# print(lar_df.info())
-lar_lat_df2 = lar_df_j['Lat'].dropna()
-lar_long_df2 = lar_df_j['Long'].dropna()
-# print(lar_df.info())
-# lar_df.Lat.dropna()
-# print(lar_lat_df2)
-lar_lat_list = lar_lat_df2.values.tolist()
-lar_long_list = lar_long_df2.values.tolist()
+func.map_crime(d_df, 'Homicide', 'E13')
 
-# print(lar_lat_list)
-for v in lar_lat_list:
-    if v == -1.0:
-        lar_lat_list.remove(v)
-for v in lar_long_list:
-    if v == -1.0:
-        lar_long_list.remove(v)
-# print(len(lar_lat_list), len(lar_long_list))
-m = folium.Map([42.32, -71.0589], zoom_start=12)
-for val in range(len(lar_lat_list)):
-    folium.Marker(location=(lar_lat_list[val], lar_long_list[val])).add_to(m)
-
-m.save('index.html')
-
-
-
-
-
+func.dis_crime_accurance(boston_districts, d_df)
