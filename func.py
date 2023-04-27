@@ -279,4 +279,4 @@ def dis_crime_accurance(districts, df):
         res_dict[val] = l[:5]
 
         # print()
-    print(res_dict)
+    return res_dict
